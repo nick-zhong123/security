@@ -3,12 +3,11 @@ package com.nick.security.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.nick.security.dto.User;
 import com.nick.security.dto.UserQueryCodition;
+import com.nick.security.exception.UserNotExistException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.tags.BindErrorsTag;
-
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +76,6 @@ public class UserController {
     @GetMapping("/detail/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
     public User getDetailInfo(@PathVariable String id) {
-        throw new RuntimeException("Not exist!");
+        throw new UserNotExistException(id);
     }
 }
