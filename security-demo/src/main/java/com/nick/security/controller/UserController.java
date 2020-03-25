@@ -1,13 +1,15 @@
 package com.nick.security.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.nick.security.dto.User;
 import com.nick.security.dto.UserQueryCodition;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.tags.BindErrorsTag;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,18 +23,60 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@RequestMapping("user")
 public class UserController {
 
-    @RequestMapping(value = "user", method = RequestMethod.GET)
-    public List<User> query(UserQueryCodition condition) {
+    @PostMapping
+//    public User create(@Valid @RequestBody User user, BindingResult result) {
+    public User create(@Valid @RequestBody User user) {
 
+//        if (result.hasErrors()) {
+//            result.getAllErrors().forEach(error -> log.info(error.getDefaultMessage()));
+//        }
+        log.info("id:{}, username:{}, password:{}, time:{}",
+                user.getId(), user.getUsername(), user.getPassword(), user.getBirthday().getTime());
+        return User.builder().id("1").build();
+    }
+
+    @DeleteMapping("{id:\\d+}")
+    public String delete(@PathVariable String id) {
+        log.info("delete id:{}", id);
+        return "delete id:" + id;
+    }
+
+    @PutMapping("{id:\\d+}")
+    public User update(@Valid @RequestBody User user, BindingResult result) {
+        if (result.hasErrors()) {
+            result.getAllErrors().forEach(error -> {
+                FieldError fieldError = (FieldError) error;
+                log.info("Field:{}, message:{}", fieldError.getField(), error.getDefaultMessage());
+            });
+        }
+        log.info("id:{}, username:{}, password:{}, time:{}",
+                user.getId(), user.getUsername(), user.getPassword(), user.getBirthday().getTime());
+        return User.builder().id("1").build();
+    }
+
+    @GetMapping
+    @JsonView(User.UserSimpleView.class)
+    public List<User> query(UserQueryCodition condition) {
         log.info("Condition:{}", condition.toString());
         List<User> userList = new ArrayList<>();
         userList.add(new User());
         userList.add(new User());
         userList.add(new User());
         return userList;
-
     }
 
+    @GetMapping("{id:\\d+}")
+    @JsonView(User.UserDetailView.class)
+    public User getInfo(@PathVariable String id) {
+        return User.builder().username("tom").build();
+    }
+
+    @GetMapping("/detail/{id:\\d+}")
+    @JsonView(User.UserDetailView.class)
+    public User getDetailInfo(@PathVariable String id) {
+        throw new RuntimeException("Not exist!");
+    }
 }
