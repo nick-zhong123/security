@@ -4,10 +4,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.nick.security.dto.User;
 import com.nick.security.dto.UserQueryCodition;
 import com.nick.security.exception.UserNotExistException;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,7 @@ public class UserController {
 
     @PostMapping
 //    public User create(@Valid @RequestBody User user, BindingResult result) {
+    @ApiOperation(value = "用户查询服务")
     public User create(@Valid @RequestBody User user) {
 
 //        if (result.hasErrors()) {

@@ -2,6 +2,7 @@ package com.nick.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.nick.security.validator.MyConstraint;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class User {
     public interface UserSimpleView {}
     public interface UserDetailView extends UserSimpleView {}
 
+    @ApiParam(value = "用户ID")
     @JsonView(UserSimpleView.class)
     private String id;
 
